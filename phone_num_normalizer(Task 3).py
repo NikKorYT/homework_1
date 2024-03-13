@@ -14,22 +14,23 @@ raw_numbers = [
 
 def normalize_phone(phone_number) -> list:
     """This function is taking a phone number as a string and normalizing it"""
-    phone_number = re.sub(r'\D', '', phone_number)  # remove all non-digit characters
-
-    if len(phone_number) == 12:                    # if the number is in international format rerurn it
+    phone_number = re.sub(r'[^0-9+]', '', phone_number)  # remove all non-digit characters except +
+    
+    
+    #if number is starting with +380, return it as is
+    if phone_number.startswith("+380"):
+        return phone_number
+    
+    #if number is starting with 380, add + to the beginning
+    elif phone_number.startswith("380"):
         return f"+{phone_number}"
     
-    elif len(phone_number) == 10:                  # if the number is in national format add the country code
+    #if number is starting with 0, add +38 to the beginning
+    elif phone_number.startswith("0"):
         return f"+38{phone_number}"
     
-    elif len(phone_number) == 11:                  # if the number is in national format with 0 at the beginning add the country code
-        return f"+3{phone_number}"
     
-    elif len(phone_number) == 9:                    # if the number is in national format without the country code add it
-        return f"+380{phone_number}"    
-                
-    else:
-        return f"Invalid phone number: {phone_number}"    # if the number is not in any of the above formats return an error message
 
 sanitized_numbers = [normalize_phone(num) for num in raw_numbers]
-print("Нормалізовані номери телефонів для SMS-розсилки:", sanitized_numbers)
+output = f"Нормалізовані номери телефонів для SMS-розсилки: {sanitized_numbers}"
+print(output)
